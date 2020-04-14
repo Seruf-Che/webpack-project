@@ -22,12 +22,13 @@ const getCSSloader = (loader) => {
       },
     },
     'css-loader'
-  ]
+  ];
 
   if (loader) use.push(`${loader}-loader`);
 
   return use;
-}
+};
+
 const getJSloader = () => {
   const use = [
     {
@@ -36,19 +37,19 @@ const getJSloader = () => {
         presets: ['@babel/preset-env']
       }
     }
-  ]
+  ];
 
   if (isDev) use.push('eslint-loader');
 
   return use;
-}
+};
 
 const optimization = () => {
   const config = {
     splitChunks: {
       chunks: "all"
     }
-  }
+  };
 
   if (isProd) {
     config.minimizer = [
@@ -58,10 +59,25 @@ const optimization = () => {
   }
 
   return config;
-}
+};
 
-const getPlugins = () => {
-  const plugins = [
+module.exports = {
+  mode: "development",
+  context: path.resolve(__dirname, "src"),
+  entry: {
+    index: ["@babel/polyfill","./index.js"]
+  },
+  output: {
+    filename: getFileName("js"),
+    path: path.resolve(__dirname, "dist")
+  },
+  devtool: isDev ? 'source-map' : '',
+  devServer: {
+    port: 4200,
+    hot: isDev
+  },
+  optimization: optimization(),
+  plugins: [
     new HTMLWebpackPlugin({
       template: "./index.html",
       minify: {
@@ -83,28 +99,7 @@ const getPlugins = () => {
       filename: getFileName("css")
     }),
     new StylelintWebpackPlugin()
-  ];
-
-  return plugins;
-};
-
-module.exports = {
-  mode: "development",
-  context: path.resolve(__dirname, "src"),
-  entry: {
-    index: ["@babel/polyfill","./index.js"]
-  },
-  output: {
-    filename: getFileName("js"),
-    path: path.resolve(__dirname, "dist")
-  },
-  devtool: isDev ? 'source-map' : '',
-  devServer: {
-    port: 4200,
-    hot: isDev
-  },
-  optimization: optimization(),
-  plugins: getPlugins(),
+  ],
   module: {
     rules: [
       {
