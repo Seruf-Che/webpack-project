@@ -1,7 +1,7 @@
 # Webpack base project
 
 ## Scripts
-`npm run start` to start dev server
+`npm start` to start dev server
 
 `npm run build` to build project
 
